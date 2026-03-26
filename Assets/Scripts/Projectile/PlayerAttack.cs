@@ -12,7 +12,9 @@ public class PlayerAttack : MonoBehaviour
 
     private PlayerMovement playerMovement;
 
-    private float cooldownTimer = math.Ifinity;
+    private float cooldownTimer = Mathf.Infinity;
+
+
 
     private void Awake()
     {
@@ -24,8 +26,8 @@ public class PlayerAttack : MonoBehaviour
     {
         if(Input.GetMouseButton(0) && cooldownTimer > attackCooldown && playerMovement.canAttack())
             Attack();
-        
-        cooldownTimer += cooldownTimer.deltaTime;
+
+        cooldownTimer += Time.deltaTime;
     }
 
     private void Attack()
@@ -33,11 +35,16 @@ public class PlayerAttack : MonoBehaviour
         anim.SetTrigger("attack");
         cooldownTimer = 0;
 
-        fireballs[0].transform.position = firePoint.position;
-        fireballs[0].GetComponent<Projectile>().SetDirection(Mathf.sign(transform.localScale.x));
+        fireballs[FindFireball()].transform.position = firePoint.position;
+        fireballs[FindFireball()].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x));
     }
-    
-
-    
-    
+    private int FindFireball()
+    {
+        for (int i = 0; i < fireballs.Length; i++)
+        {
+            if (!fireballs[i].activeInHierarchy)
+                return i;
+        }
+        return 0;
+    }
 }
